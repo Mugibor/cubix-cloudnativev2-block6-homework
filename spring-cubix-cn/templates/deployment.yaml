@@ -25,6 +25,10 @@ spec:
       serviceAccountName: {{ include "spring-cubix-cn.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      volumes:
+        - name: config-volume
+          configMap:
+            name: {{ .Release.Name }}-config
       containers:
         - name: {{ .Release.Name }}
           securityContext:
@@ -44,6 +48,11 @@ spec:
             value: "8080"
           - name: MANAGEMENT_SERVER_PORT
             value: "8081"
+          - name: TARGET_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: hw6secret
+                key: apikey
           ports:
             - name: http
               containerPort: 8080
@@ -51,6 +60,29 @@ spec:
             - name: management
               containerPort: 8081
               protocol: TCP
+          volumeMounts:
+            - name: config-volume
+              mountPath: /config
+          startupProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: management
+            initialDelaySeconds: 1
+            periodSeconds: 1
+            failureThreshold: 30
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: management
+            periodSeconds: 10
+            failureThreshold: 2
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: management
+            periodSeconds: 5
+            failureThreshold: 1
+
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}

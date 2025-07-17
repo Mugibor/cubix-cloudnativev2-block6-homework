@@ -14,3 +14,10 @@ helm upgrade native .\spring-cubix-cn\ -f native.yaml -n cubix-cn --install
 |= `Started`
 | json
 | line_format `{{if contains .container "native"}}[NATIVE]{{else}}[JVM]{{end}} | Startup Time: {{.message}}`
+
+
+
+HW7:
+
+kubectl create secret generic hw6secret --from-literal=apiKey=c7e9de1e93637eb6157e3ab03698169e0fe392b17204dc42c12c2c55aa607819 -n cubix-cn
+

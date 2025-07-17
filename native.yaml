@@ -18,6 +18,8 @@ loggingMode: stdout-json
 env:
 - name: SERVER_TOMCAT_THREADS_MAX
   value: 50
+- name: SPRING_CONFIG_IMPORT
+  value: "file:/config/application.properties"
 
 resources:
   limits:
