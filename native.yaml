@@ -6,11 +6,14 @@ image:
 
 ingress:
   enabled: true
+  className: nginx
   hosts:
     - host: other.cubix.localhost
       paths:
         - path: /
           pathType: Prefix
+
+loggingMode: stdout-json
 
 env:
 - name: SERVER_TOMCAT_THREADS_MAX

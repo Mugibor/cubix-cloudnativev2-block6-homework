@@ -1,0 +1,16 @@
+kubectl create ns cubix-cn
+
+helm upgrade jvm -f .\jvm.yaml .\spring-cubix-cn\ -n cubix-cn --install
+helm upgrade native .\spring-cubix-cn\ -f native.yaml -n cubix-cn --install
+
+
+{namespace="cubix-cn"}
+|= `DemoController`
+| json
+| line_format `{{if contains .container "native"}}[NATIVE]{{else}}[JVM]{{end}} | {{.message}} - {{.demo_name}}`
+
+
+{namespace="cubix-cn"}
+|= `Started`
+| json
+| line_format `{{if contains .container "native"}}[NATIVE]{{else}}[JVM]{{end}} | Startup Time: {{.message}}`
