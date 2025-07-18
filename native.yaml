@@ -12,12 +12,22 @@ ingress:
       paths:
         - path: /
           pathType: Prefix
+        - path: /call/b
+          pathType: Prefix
+          backend:
+            service:
+              name: appb
+              port:
+                number: 8080
+
 
 loggingMode: stdout-json
 
 env:
 - name: SERVER_TOMCAT_THREADS_MAX
   value: 50
+- name: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
+  value: "health,prometheus"
 - name: SPRING_CONFIG_IMPORT
   value: "file:/config/application.properties"
 
@@ -28,3 +38,10 @@ resources:
   requests:
     cpu: 100m
     memory: 100Mi
+
+replicaCount: 2
+
+podAnnotations:
+  prometheus.io/scrape: "true"
+  prometheus.io/path: "/actuator/prometheus"
+  prometheus.io/port: "8081"
